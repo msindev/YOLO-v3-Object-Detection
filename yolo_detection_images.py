@@ -1,6 +1,9 @@
 import numpy as np
 import cv2
 
+confidenceThreshold = 0.5
+NMSThreshold = 0.3
+
 modelConfiguration = 'cfg/yolov3.cfg'
 modelWeights = 'yolov3.weights'
 
@@ -23,3 +26,34 @@ layersOutputs = net.forward(layerName)
 boxes = []
 confidences = []
 classIDs = []
+
+for output in layersOutputs:
+    for detection in output:
+        scores = detection[5:]
+        classID = np.argmax(scores)
+        confidence = scores[classID]
+        if confidence > confidenceThreshold:
+            box = detection[0:4] * np.array([W, H, W, H])
+            (centerX, centerY,  width, height) = box.astype('int')
+            x = int(centerX - (width/2))
+            y = int(centerY - (height/2))
+
+            boxes.append([x, y, int(width), int(height)])
+            confidences.append(float(confidence))
+            classIDs.append(classID)
+
+#Apply Non Maxima Suppression
+detectionNMS = cv2.dnn.NMSBoxes(boxes, confidence, confidenceThreshold, NMSThreshold)
+
+if(len(detectionNMS) > 0):
+    for i in detectionNMS.flatten():
+        (x, y) = (boxes[i][0], boxes[i][1])
+        (w, h) = (boxes[i][2], boxes[i][3])
+
+        color = (0, 255, 0)
+        cv2.rectangle(image, (x, y), (x + w, y + h), color, 2)
+        text = '{}: {:.4f}'.format(labels[classIDs[i]], confidences[i])
+        cv2.putText(image, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+
+cv2.imshow('Image', image)
+cv2.waitKey(0) 
