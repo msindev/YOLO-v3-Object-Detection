@@ -15,7 +15,7 @@ COLORS = np.random.randint(0, 255, size=(len(labels), 3), dtype="uint8")
 
 net = cv2.dnn.readNetFromDarknet(modelConfiguration, modelWeights)
 
-image = cv2.imread('images/dog.jpg')
+image = cv2.imread('images/person.jpg')
 (H, W) = image.shape[:2]
 
 #Determine output layer names
