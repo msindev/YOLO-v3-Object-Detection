@@ -10,7 +10,7 @@ modelWeights = 'yolov3.weights'
 labelsPath = 'coco.names'
 labels = open(labelsPath).read().strip().split('\n')
 
-np.random.seed(42)
+np.random.seed(10)
 COLORS = np.random.randint(0, 255, size=(len(labels), 3), dtype="uint8")
 
 net = cv2.dnn.readNetFromDarknet(modelConfiguration, modelWeights)
