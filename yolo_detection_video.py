@@ -18,7 +18,7 @@ net = cv2.dnn.readNetFromDarknet(modelConfiguration, modelWeights)
 outputLayer = net.getLayerNames()
 outputLayer = [outputLayer[i[0] - 1] for i in net.getUnconnectedOutLayers()]
 
-video = cv2.VideoCapture('video.mp4')
+video = cv2.VideoCapture('chase.mp4')
 writer = None
 (W, H) = (None, None)
 
@@ -74,10 +74,11 @@ while True:
 
             if writer is None:
                 fourcc = cv2.VideoWriter_fourcc(*'MJPG')
-                writer = cv2.VideoWriter('output.avi', fourcc, 30, (frame.shape[1], frame.shape[0]), True)
-    writer.write(frame)
-    print("Writing frame" , count+1)
-    count = count + 1
+                writer = cv2.VideoWriter('chase_output.avi', fourcc, 30, (frame.shape[1], frame.shape[0]), True)
+    if writer is not None:
+        writer.write(frame)
+        print("Writing frame" , count+1)
+        count = count + 1
 
 writer.release()
 video.release()
