@@ -4,6 +4,9 @@ import cv2
 confidenceThreshold = 0.5
 NMSThreshold = 0.3
 
+np.random.seed(42)
+COLORS = np.random.randint(0, 255, size=(len(LABELS), 3), dtype="uint8")
+
 modelConfiguration = 'cfg/yolov3.cfg'
 modelWeights = 'yolov3.weights'
 
@@ -12,7 +15,7 @@ labels = open(labelsPath).read().strip().split('\n')
 
 net = cv2.dnn.readNetFromDarknet(modelConfiguration, modelWeights)
 
-image = cv2.imread('images/horses.jpg')
+image = cv2.imread('images/dogs.jpg')
 (H, W) = image.shape[:2]
 
 #Determine output layer names
@@ -50,7 +53,7 @@ if(len(detectionNMS) > 0):
         (x, y) = (boxes[i][0], boxes[i][1])
         (w, h) = (boxes[i][2], boxes[i][3])
 
-        color = (0, 255, 0)
+        color = [int(c) for c in COLORS[classIDs[i]]]
         cv2.rectangle(image, (x, y), (x + w, y + h), color, 2)
         text = '{}: {:.4f}'.format(labels[classIDs[i]], confidences[i])
         cv2.putText(image, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
