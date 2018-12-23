@@ -12,7 +12,7 @@ labels = open(labelsPath).read().strip().split('\n')
 
 net = cv2.dnn.readNetFromDarknet(modelConfiguration, modelWeights)
 
-image = 'images/dog.jpg'
+image = cv2.imread('images/horses.jpg')
 (H, W) = image.shape[:2]
 
 #Determine output layer names
@@ -43,7 +43,7 @@ for output in layersOutputs:
             classIDs.append(classID)
 
 #Apply Non Maxima Suppression
-detectionNMS = cv2.dnn.NMSBoxes(boxes, confidence, confidenceThreshold, NMSThreshold)
+detectionNMS = cv2.dnn.NMSBoxes(boxes, confidences, confidenceThreshold, NMSThreshold)
 
 if(len(detectionNMS) > 0):
     for i in detectionNMS.flatten():
@@ -56,4 +56,4 @@ if(len(detectionNMS) > 0):
         cv2.putText(image, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
 cv2.imshow('Image', image)
-cv2.waitKey(0) 
+cv2.waitKey(0)
