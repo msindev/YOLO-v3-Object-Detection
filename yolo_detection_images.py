@@ -17,3 +17,9 @@ layerName = net.getLayerNames()
 layerName = [layerName[i[0] - 1] for i in net.getUnconnectedOutLayers()]
 
 blob = cv2.dnn.blobFromImage(image, 1 / 255.0, (416, 416), swapRB = True, crop = False)
+net.setInput(blob)
+layersOutputs = net.forward(layerName)
+
+boxes = []
+confidences = []
+classIDs = []
